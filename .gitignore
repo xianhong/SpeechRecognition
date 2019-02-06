@@ -1,0 +1,7 @@
+__pycache__
+data
+*.npy
+SpeechRecognition.ipynb
+make_tfrecord2.ipynb
+.ipynb_checkpoints
+*.tfrecords
