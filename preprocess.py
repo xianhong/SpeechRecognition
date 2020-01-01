@@ -1,4 +1,5 @@
 import librosa
+import pywt
 import os
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical
@@ -6,6 +7,19 @@ import numpy as np
 from tqdm import tqdm
 
 DATA_PATH = "./data/"
+def wavDecode(file_path):
+    wave, sr = librosa.load(file_path, mono=True, sr=7001)
+    scales = 2**np.linspace(-2,7,20)
+    coeff, _ = pywt.cwt(wave, scales, 'morl', 1)
+    coeff=coeff[:,::4]
+    if (1750 > coeff.shape[1]):
+        pad_width = 1750 - coeff.shape[1]
+        coeff = np.pad(coeff, pad_width=((0, 0), (0, pad_width)), mode='constant')
+
+    # Else cutoff the remaining parts
+    else:
+        coeff = coeff[:, :1750]
+    return coeff
 
 
 # Input: Folder Path
